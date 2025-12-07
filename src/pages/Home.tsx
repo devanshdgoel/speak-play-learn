@@ -218,12 +218,12 @@ const Home = () => {
           <img 
             src={eloquaLogo} 
             alt="ELOQUA" 
-            className="h-8 md:h-10 w-auto"
+            className="h-10 md:h-14 w-auto"
           />
         </button>
 
-        {/* Nav bar - smaller, more compact */}
-        <nav className="flex items-center gap-1 md:gap-3 bg-[hsl(181_69%_42%)] rounded-full px-3 md:px-6 py-1.5 md:py-2 shadow-lg">
+        {/* Nav bar - wider, extends between logo and profile */}
+        <nav className="flex-1 mx-4 md:mx-8 flex items-center justify-center gap-2 md:gap-4 bg-[hsl(181_69%_42%)] rounded-full px-4 md:px-8 py-2 md:py-2.5 shadow-lg">
           <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors">
             <img src={trophyIcon} alt="Trophies" className="w-6 h-6 md:w-8 md:h-8" />
           </button>
@@ -233,7 +233,7 @@ const Home = () => {
           <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors">
             <img src={settingsIcon} alt="Settings" className="w-6 h-6 md:w-8 md:h-8" />
           </button>
-          <div className="flex items-center gap-0.5 ml-1 md:ml-2">
+          <div className="flex items-center gap-0.5 ml-2 md:ml-4">
             <img src={fireStreak} alt="Streak" className="w-5 h-7 md:w-6 md:h-9" />
             <span className="text-white font-bold text-base md:text-lg">13</span>
           </div>
