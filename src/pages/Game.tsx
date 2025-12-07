@@ -140,6 +140,14 @@ const Game = () => {
         </div>
       </div>
 
+      {/* Test button - Next Level */}
+      <button
+        onClick={() => navigate("/game-level-2")}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 px-6 py-3 bg-accent text-white font-fredoka font-bold rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform"
+      >
+        Next Level →
+      </button>
+
       {/* Fish school bottom right */}
       <div className="absolute bottom-[8%] right-[10%] z-10 flex gap-2">
         {[0, 1, 2, 3].map((i) => (
