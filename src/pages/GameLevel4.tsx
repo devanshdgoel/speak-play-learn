@@ -15,9 +15,9 @@ const GameLevel4 = () => {
   const [progress] = useState(95);
 
   const jellyfishStops = [
-    { id: 1, word: "FALL", x: "12%", bottom: "42%" },
-    { id: 2, word: "BALL", x: "42%", bottom: "38%" },
-    { id: 3, word: "SHELL", x: "72%", bottom: "44%" },
+    { id: 1, word: "FALL", x: "5%", bottom: "38%" },
+    { id: 2, word: "BALL", x: "38%", bottom: "32%" },
+    { id: 3, word: "SHELL", x: "72%", bottom: "40%" },
   ];
 
   return (
@@ -47,16 +47,16 @@ const GameLevel4 = () => {
         <div className="w-3 h-2 bg-[hsl(210_80%_45%)] rounded-full mt-1" style={{ clipPath: "polygon(0 50%, 100% 0, 100% 100%)" }} />
       </div>
 
-      {/* Seaweed decorations - smaller and less intrusive */}
+      {/* Seaweed decorations - small */}
       <img 
         src={seaweedCurly} 
         alt="" 
-        className="absolute left-[-2%] bottom-0 h-[45%] w-auto animate-sway origin-bottom opacity-80"
+        className="absolute left-[-1%] bottom-0 h-[25%] w-auto animate-sway origin-bottom opacity-70"
       />
       <img 
         src={seaweedCurly} 
         alt="" 
-        className="absolute right-[-2%] bottom-0 h-[40%] w-auto animate-sway-delayed origin-bottom opacity-70 scale-x-[-1]"
+        className="absolute right-[-1%] bottom-0 h-[22%] w-auto animate-sway-delayed origin-bottom opacity-60 scale-x-[-1]"
       />
 
       {/* Coral decorations at bottom - matching reference positions */}
@@ -163,11 +163,11 @@ const GameLevel4 = () => {
               style={{ animationDelay: `${index * 0.2}s` }}
             />
             
-            {/* Coral platform - larger and properly positioned */}
+            {/* Coral platform - much larger */}
             <img 
               src={coralTeal} 
               alt="" 
-              className="w-24 h-auto md:w-28 mt-2"
+              className="w-32 h-auto md:w-40 lg:w-44 mt-2"
             />
           </div>
         ))}
