@@ -9,8 +9,7 @@ import lockedJellyfish from "@/assets/locked-jellyfish.svg";
 import lockedSignpost from "@/assets/locked-signpost.svg";
 import seaweedLeft from "@/assets/seaweed-left.svg";
 import seaweedRight from "@/assets/seaweed-right.svg";
-import FishGroup from "@/components/FishGroup";
-import SmallFish from "@/components/SmallFish";
+import BackgroundFish from "@/components/BackgroundFish";
 
 // Node positions along the path (x%, y% from top)
 const nodes = [
@@ -120,27 +119,17 @@ const Home = () => {
         <img 
           src={seaweedLeft} 
           alt="" 
-          className="absolute left-[10%] bottom-0 w-10 md:w-16 h-auto animate-sway origin-bottom"
+          className="absolute left-[10%] bottom-0 w-10 md:w-16 h-auto animate-sway origin-bottom z-10"
         />
         <img 
           src={seaweedRight} 
           alt="" 
-          className="absolute right-[5%] bottom-0 w-20 md:w-32 h-auto animate-sway-delayed origin-bottom"
-        />
-
-        {/* Fish school */}
-        <div className="absolute bottom-[42%] left-[3%]">
-          <FishGroup />
-        </div>
-
-        {/* Small accent fish */}
-        <SmallFish 
-          className="absolute top-[52%] right-[25%]" 
-          color="orange" 
-          speed={18}
-          size="medium"
+          className="absolute right-[5%] bottom-0 w-20 md:w-32 h-auto animate-sway-delayed origin-bottom z-10"
         />
       </div>
+
+      {/* Background fish - behind everything */}
+      <BackgroundFish />
 
       {/* Fixed Header bar */}
       <header className="fixed top-0 left-0 right-0 z-20 px-4 md:px-8 py-3 flex items-center justify-between">

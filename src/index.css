@@ -186,10 +186,55 @@
 
 @keyframes swim-across {
   0% {
-    transform: translateX(0);
+    transform: translateX(0) scaleX(-1);
   }
   100% {
-    transform: translateX(calc(100vw + 100px));
+    transform: translateX(calc(100vw + 150px)) scaleX(-1);
+  }
+}
+
+@keyframes swim-continuous {
+  0% {
+    transform: translateX(0) scaleX(-1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(160vw + 100px)) scaleX(-1);
+    opacity: 1;
+  }
+}
+
+@keyframes swim-fade {
+  0% {
+    transform: translateX(0) scaleX(-1);
+    opacity: 1;
+  }
+  60% {
+    transform: translateX(calc(96vw)) scaleX(-1);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(calc(128vw)) scaleX(-1);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(calc(160vw + 100px)) scaleX(-1);
+    opacity: 0;
+  }
+}
+
+@keyframes swim-pause {
+  0% {
+    transform: translateX(0) scaleX(-1);
+  }
+  35% {
+    transform: translateX(calc(56vw)) scaleX(-1);
+  }
+  50% {
+    transform: translateX(calc(56vw)) scaleX(-1);
+  }
+  100% {
+    transform: translateX(calc(160vw + 100px)) scaleX(-1);
   }
 }
 
