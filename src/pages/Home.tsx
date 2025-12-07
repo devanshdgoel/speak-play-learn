@@ -28,7 +28,12 @@ const baseNodes = [
 
 const Home = () => {
   const navigate = useNavigate();
-  const { completedLevels } = useGameProgress();
+  const { completedLevels, resetProgress } = useGameProgress();
+  
+  const handleLogoClick = () => {
+    resetProgress();
+    navigate("/");
+  };
 
   // Determine node types based on progress
   // completedLevels = 5 means levels 1-5 are complete, so current is level 6
@@ -170,8 +175,8 @@ const Home = () => {
 
       {/* Fixed Header bar */}
       <header className="fixed top-0 left-0 right-0 z-20 px-4 md:px-8 py-3 flex items-center justify-between">
-        {/* Logo - clickable to go back to start */}
-        <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity">
+        {/* Logo - clickable to reset and go back to start */}
+        <button onClick={handleLogoClick} className="hover:opacity-80 transition-opacity">
           <img 
             src={eloquaLogo} 
             alt="ELOQUA" 

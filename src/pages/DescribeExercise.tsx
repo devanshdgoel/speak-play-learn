@@ -13,7 +13,12 @@ type GameState = "ready" | "listening" | "feedback" | "completed";
 
 const DescribeExercise = () => {
   const navigate = useNavigate();
-  const { completeCurrentLevel } = useGameProgress();
+  const { completeCurrentLevel, resetProgress } = useGameProgress();
+  
+  const handleLogoClick = () => {
+    resetProgress();
+    navigate("/");
+  };
   const [gameState, setGameState] = useState<GameState>("ready");
   const [feedbackText, setFeedbackText] = useState("");
   const [describedObject, setDescribedObject] = useState("");
@@ -83,7 +88,7 @@ const DescribeExercise = () => {
 
       {/* Header */}
       <header className="relative z-20 px-4 md:px-8 py-4 flex items-center justify-between">
-        <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity">
+        <button onClick={handleLogoClick} className="hover:opacity-80 transition-opacity">
           <img src={eloquaLogo} alt="ELOQUA" className="h-8 md:h-10 w-auto" />
         </button>
         <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-accent border-4 border-white/20 shadow-lg" />
@@ -106,11 +111,14 @@ const DescribeExercise = () => {
       </div>
 
       {/* Main content */}
-      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-8">
-        {/* Instruction text */}
-        <p className="font-fredoka text-lg md:text-xl text-[hsl(200_50%_25%)] mb-8 italic max-w-lg text-center">
+      <main className="relative z-10 flex-1 flex flex-col items-center px-4 pt-4 pb-8">
+        {/* Instruction text - positioned at top with padding */}
+        <p className="font-fredoka text-lg md:text-xl text-[hsl(200_50%_25%)] mb-4 italic max-w-lg text-center">
           Look for an object around you and describe it in one sentence.
         </p>
+        
+        {/* Spacer to push content down */}
+        <div className="flex-1 flex flex-col items-center justify-center">
 
         {/* Object illustration with feedback bubble */}
         <div className="relative mb-8">
@@ -174,6 +182,7 @@ const DescribeExercise = () => {
             </div>
           </button>
         )}
+        </div>
 
         {/* Completed modal */}
         {gameState === "completed" && (
