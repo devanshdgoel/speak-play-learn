@@ -184,6 +184,15 @@
   }
 }
 
+@keyframes swim-across {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(100vw + 100px));
+  }
+}
+
 @keyframes bubble {
   0%, 100% {
     transform: scale(1);
