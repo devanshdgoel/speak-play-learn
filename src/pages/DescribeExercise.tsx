@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import eloquaLogo from "@/assets/eloqua-title.svg";
 import backArrow from "@/assets/back-arrow.svg";
@@ -8,37 +8,72 @@ import seaweedLeft from "@/assets/seaweed-tall-left.svg";
 import seaweedRight from "@/assets/seaweed-tall-right.svg";
 import BackgroundFish from "@/components/BackgroundFish";
 import { useGameProgress } from "@/hooks/useGameProgress";
+import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
+import { useSpeechEvaluation } from "@/hooks/useSpeechEvaluation";
+import { toast } from "sonner";
 
-type GameState = "ready" | "listening" | "feedback" | "completed";
+type GameState = "ready" | "listening" | "evaluating" | "feedback" | "completed";
 
 const DescribeExercise = () => {
   const navigate = useNavigate();
   const { completeCurrentLevel, resetProgress } = useGameProgress();
+  const { isListening, transcript, error: speechError, startListening, stopListening, resetTranscript } = useSpeechRecognition();
+  const { isEvaluating, result, evaluate, reset: resetEvaluation } = useSpeechEvaluation();
   
-  const handleLogoClick = () => {
-    resetProgress();
-    navigate("/");
-  };
   const [gameState, setGameState] = useState<GameState>("ready");
   const [feedbackText, setFeedbackText] = useState("");
   const [describedObject, setDescribedObject] = useState("");
 
-  const handleStartSpeaking = () => {
-    setGameState("listening");
-    
-    // Simulate AI evaluation after 3 seconds
-    setTimeout(() => {
-      // Random chance of success or feedback
-      const isSuccess = Math.random() > 0.3;
-      
-      if (isSuccess) {
-        setDescribedObject("bottle");
+  const handleLogoClick = () => {
+    resetProgress();
+    navigate("/");
+  };
+
+  // Handle speech recognition errors
+  useEffect(() => {
+    if (speechError) {
+      toast.error(speechError);
+      setGameState("ready");
+    }
+  }, [speechError]);
+
+  // Handle listening state changes
+  useEffect(() => {
+    if (isListening) {
+      setGameState("listening");
+    }
+  }, [isListening]);
+
+  // Handle evaluation completion
+  useEffect(() => {
+    if (result) {
+      if (result.passed) {
+        setDescribedObject(transcript.trim() || "object");
         setGameState("completed");
       } else {
-        setFeedbackText('Try that again with emphasis on the "r" sounds');
+        setFeedbackText(result.suggestion || result.feedback);
         setGameState("feedback");
       }
-    }, 3000);
+    }
+  }, [result, transcript]);
+
+  const handleStartSpeaking = async () => {
+    resetTranscript();
+    resetEvaluation();
+    startListening();
+  };
+
+  const handleStopSpeaking = async () => {
+    stopListening();
+    
+    if (!transcript.trim()) {
+      toast.error("No speech detected. Please try again.");
+      setGameState("ready");
+      return;
+    }
+
+    setGameState("evaluating");
+    await evaluate(transcript, "describe");
   };
 
   const handleContinue = () => {
@@ -49,6 +84,8 @@ const DescribeExercise = () => {
   const handleTryAgain = () => {
     setGameState("ready");
     setFeedbackText("");
+    resetTranscript();
+    resetEvaluation();
   };
 
   return (
@@ -120,6 +157,15 @@ const DescribeExercise = () => {
         {/* Spacer to push content down */}
         <div className="flex-1 flex flex-col items-center justify-center">
 
+        {/* Live transcript display during listening */}
+        {(gameState === "listening" || gameState === "evaluating") && transcript && (
+          <div className="mb-4 bg-white/80 rounded-2xl px-6 py-3 max-w-md animate-fade-in">
+            <p className="font-fredoka text-base text-[hsl(200_50%_25%)] text-center">
+              "{transcript}"
+            </p>
+          </div>
+        )}
+
         {/* Object illustration with feedback bubble */}
         <div className="relative mb-8">
           {/* Table and lamp */}
@@ -160,19 +206,30 @@ const DescribeExercise = () => {
           )}
         </div>
 
-        {/* Start Speaking button */}
+        {/* Action buttons */}
         {gameState !== "completed" && (
           <button
-            onClick={gameState === "feedback" ? handleTryAgain : handleStartSpeaking}
-            disabled={gameState === "listening"}
+            onClick={gameState === "listening" ? handleStopSpeaking : (gameState === "feedback" ? handleTryAgain : handleStartSpeaking)}
+            disabled={gameState === "evaluating"}
             className="relative group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             <div className="relative">
               {/* Button shadow */}
               <div className="absolute top-2 left-0 right-0 h-12 md:h-14 bg-[#112C55] rounded-full" />
               {/* Button body */}
-              <div className="relative bg-[hsl(181_69%_42%)] hover:bg-[hsl(181_69%_38%)] text-white font-fredoka font-bold text-xl md:text-2xl px-12 md:px-16 py-3 md:py-4 rounded-full shadow-lg transition-colors">
-                {gameState === "listening" ? "Listening..." : "Start Speaking"}
+              <div className={`relative ${gameState === "listening" ? "bg-[hsl(var(--coral))]" : "bg-[hsl(181_69%_42%)]"} hover:opacity-90 text-white font-fredoka font-bold text-xl md:text-2xl px-12 md:px-16 py-3 md:py-4 rounded-full shadow-lg transition-colors`}>
+                {gameState === "listening" ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-3 h-3 bg-white rounded-full animate-pulse" />
+                    Stop & Evaluate
+                  </span>
+                ) : gameState === "evaluating" ? (
+                  "Evaluating..."
+                ) : gameState === "feedback" ? (
+                  "Try Again"
+                ) : (
+                  "Start Speaking"
+                )}
                 {/* Bubble decoration */}
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col gap-0.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
@@ -191,9 +248,14 @@ const DescribeExercise = () => {
               <h2 className="font-fredoka font-bold text-3xl text-[hsl(200_50%_25%)] text-center mb-2">
                 Completed!
               </h2>
-              <p className="font-fredoka text-lg text-[hsl(200_50%_35%)] text-center mb-6">
-                You described your "{describedObject}" really well!
+              <p className="font-fredoka text-lg text-[hsl(200_50%_35%)] text-center mb-4">
+                {result?.feedback || "Great job!"}
               </p>
+              {result?.score && (
+                <p className="font-fredoka text-sm text-[hsl(200_50%_40%)] text-center mb-6">
+                  Score: {result.score}/10
+                </p>
+              )}
               <button
                 onClick={handleContinue}
                 className="relative group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 w-full"
