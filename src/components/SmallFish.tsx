@@ -1,18 +1,20 @@
 interface SmallFishProps {
   className?: string;
   color?: "orange" | "yellow";
+  speed?: number;
 }
 
-const SmallFish = ({ className = "", color = "orange" }: SmallFishProps) => {
+const SmallFish = ({ className = "", color = "orange", speed = 8 }: SmallFishProps) => {
   const fishColor = color === "orange" ? "hsl(var(--coral))" : "hsl(45 90% 55%)";
   
   return (
     <svg 
-      width="24" 
-      height="16" 
+      width="32" 
+      height="20" 
       viewBox="0 0 24 16" 
       fill="none" 
-      className={`animate-swim ${className}`}
+      className={className}
+      style={{ animation: `swim ${speed}s ease-in-out infinite` }}
     >
       {/* Body */}
       <ellipse cx="10" cy="8" rx="8" ry="5" fill={fishColor} />
