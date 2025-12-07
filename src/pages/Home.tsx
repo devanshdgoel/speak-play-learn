@@ -157,7 +157,10 @@ const Home = () => {
 
         {/* Nav bar - wider, extends between logo and profile */}
         <nav className="flex-1 mx-6 md:mx-12 flex items-center justify-between bg-[hsl(181_69%_42%)] rounded-full md:px-10 py-2 md:py-2.5 shadow-lg px-[70px]">
-          <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors mx-[40px]">
+          <button 
+            onClick={() => navigate("/progress")}
+            className="p-1.5 hover:bg-white/10 rounded-full transition-colors mx-[40px]"
+          >
             <img src={trophyIcon} alt="Trophies" className="w-6 h-6 md:w-8 md:h-8" />
           </button>
           <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors">
