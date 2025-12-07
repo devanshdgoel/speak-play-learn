@@ -72,13 +72,13 @@ const ProgressReport = () => {
         </h1>
 
         {/* Middle Section - Achievements and Metrics */}
-        <div className="flex flex-col lg:flex-row items-start justify-center gap-6 mb-8">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-8 mb-8">
           {/* Achievements Card */}
-          <div className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 min-w-[200px]">
+          <div className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 min-w-[200px] self-stretch flex flex-col">
             <h2 className="text-primary font-bold text-xl mb-4" style={{ fontFamily: 'Fredoka, sans-serif' }}>
               Achievements
             </h2>
-            <div className="space-y-3">
+            <div className="space-y-3 flex-1">
               <div className="flex items-center gap-3">
                 <Trophy className="w-7 h-7 text-gray-400" />
                 <span className="text-gray-700 text-sm">3 ll's in a row</span>
@@ -95,10 +95,10 @@ const ProgressReport = () => {
           </div>
 
           {/* Circular Progress Metrics */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             {/* Pronunciation Accuracy */}
             <div className="flex flex-col items-center">
-              <div className="relative w-32 h-32">
+              <div className="relative w-28 h-28">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="42" stroke="hsl(168 45% 85%)" strokeWidth="8" fill="none" />
                   <circle 
@@ -111,18 +111,18 @@ const ProgressReport = () => {
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-primary">80</span>
+                  <span className="text-2xl font-bold text-primary">80</span>
                 </div>
               </div>
-              <span className="text-sm text-gray-600 text-center mt-1">Pronunciation<br/>Accuracy</span>
+              <span className="text-xs text-gray-600 text-center mt-1">Pronunciation<br/>Accuracy</span>
             </div>
 
             {/* Connecting line */}
-            <div className="w-8 h-1 bg-primary rounded-full" />
+            <div className="w-6 h-1 bg-primary rounded-full" />
 
             {/* Volume Consistency */}
             <div className="flex flex-col items-center">
-              <div className="relative w-32 h-32">
+              <div className="relative w-28 h-28">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="42" stroke="hsl(168 45% 85%)" strokeWidth="8" fill="none" />
                   <circle 
@@ -135,18 +135,18 @@ const ProgressReport = () => {
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-primary">42</span>
+                  <span className="text-2xl font-bold text-primary">42</span>
                 </div>
               </div>
-              <span className="text-sm text-gray-600 text-center mt-1">Volume<br/>Consistency</span>
+              <span className="text-xs text-gray-600 text-center mt-1">Volume<br/>Consistency</span>
             </div>
 
             {/* Connecting line */}
-            <div className="w-8 h-1 bg-primary rounded-full" />
+            <div className="w-6 h-1 bg-primary rounded-full" />
 
             {/* Tone Stability */}
             <div className="flex flex-col items-center">
-              <div className="relative w-32 h-32">
+              <div className="relative w-28 h-28">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="42" stroke="hsl(168 45% 85%)" strokeWidth="8" fill="none" />
                   <circle 
@@ -159,29 +159,29 @@ const ProgressReport = () => {
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-primary">65</span>
+                  <span className="text-2xl font-bold text-primary">65</span>
                 </div>
               </div>
-              <span className="text-sm text-gray-600 text-center mt-1">Tone<br/>Stability</span>
+              <span className="text-xs text-gray-600 text-center mt-1">Tone<br/>Stability</span>
             </div>
+          </div>
 
-            {/* Arrow and CTA */}
-            <div className="flex items-center gap-4 ml-4">
-              <ArrowRight className="w-10 h-10 text-primary" strokeWidth={3} />
-              <div className="text-right">
-                <p className="text-gray-700 text-sm mb-2">
-                  Want more insights<br/>on your child's<br/>speech health?
-                </p>
-                <button className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors">
-                  Send Report
-                </button>
-              </div>
+          {/* Arrow and CTA */}
+          <div className="flex items-center gap-4">
+            <ArrowRight className="w-8 h-8 text-primary" strokeWidth={3} />
+            <div className="text-right">
+              <p className="text-gray-700 text-sm mb-2">
+                Want more insights<br/>on your child's<br/>speech health?
+              </p>
+              <button className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors">
+                Send Report
+              </button>
             </div>
           </div>
         </div>
 
         {/* Bottom Section - Weekly Table and Bar Chart */}
-        <div className="flex flex-col lg:flex-row items-start justify-center gap-8">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-12">
           {/* Weekly Activity Table */}
           <div className="bg-white rounded-xl overflow-hidden shadow-md border border-gray-200">
             <table className="border-collapse">
@@ -213,21 +213,21 @@ const ProgressReport = () => {
           </div>
 
           {/* Bar Chart */}
-          <div className="flex flex-col items-center">
-            <div className="flex items-end gap-1 h-40">
-              {barData.map((height, index) => (
-                <div
-                  key={index}
-                  className="w-4 bg-primary rounded-t-md"
-                  style={{ height: `${height}%` }}
-                />
-              ))}
-            </div>
-            <div className="flex items-center mt-2">
-              <span className="text-xs text-gray-500 -rotate-90 -mr-2" style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)' }}>
-                Number of Excercises
-              </span>
-              <span className="text-sm text-gray-600 ml-8">Day</span>
+          <div className="flex items-end gap-2">
+            <span className="text-xs text-gray-500 mr-1" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
+              Number of Exercises
+            </span>
+            <div className="flex flex-col items-center">
+              <div className="flex items-end gap-1 h-32">
+                {barData.map((height, index) => (
+                  <div
+                    key={index}
+                    className="w-3 bg-primary rounded-t-md"
+                    style={{ height: `${height}%` }}
+                  />
+                ))}
+              </div>
+              <span className="text-sm text-gray-600 mt-2">Day</span>
             </div>
           </div>
         </div>
