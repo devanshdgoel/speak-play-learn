@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import eloquaLogo from "@/assets/eloqua-title.svg";
 import trophyIcon from "@/assets/trophy-icon.svg";
 import lightbulbIcon from "@/assets/lightbulb-icon.svg";
@@ -24,6 +25,8 @@ const nodes = [
 ];
 
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background relative overflow-x-auto overflow-y-hidden">
       {/* Scrollable content wrapper - wider than viewport */}
@@ -87,7 +90,10 @@ const Home = () => {
               />
             )}
             {node.type === "current" && (
-              <button className="transition-transform hover:scale-110 active:scale-95">
+              <button 
+                onClick={() => navigate("/exercise")}
+                className="transition-transform hover:scale-110 active:scale-95"
+              >
                 <img 
                   src={playButtonHome} 
                   alt="Play" 
@@ -133,12 +139,14 @@ const Home = () => {
 
       {/* Fixed Header bar */}
       <header className="fixed top-0 left-0 right-0 z-20 px-4 md:px-8 py-3 flex items-center justify-between">
-        {/* Logo */}
-        <img 
-          src={eloquaLogo} 
-          alt="ELOQUA" 
-          className="h-8 md:h-10 w-auto"
-        />
+        {/* Logo - clickable to go back to start */}
+        <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity">
+          <img 
+            src={eloquaLogo} 
+            alt="ELOQUA" 
+            className="h-8 md:h-10 w-auto"
+          />
+        </button>
 
         {/* Nav bar - smaller, more compact */}
         <nav className="flex items-center gap-1 md:gap-3 bg-[hsl(181_69%_42%)] rounded-full px-3 md:px-6 py-1.5 md:py-2 shadow-lg">
