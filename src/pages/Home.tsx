@@ -18,21 +18,49 @@ import { useGameProgress } from "@/hooks/useGameProgress";
 
 // Node positions along the path (x%, y% from top)
 // Index 4 is the Jellyfish Jungle level (level 5)
-const baseNodes = [
-  { x: 7, y: 70, level: 1 },
-  { x: 14, y: 50, level: 2 },
-  { x: 24, y: 34, level: 3 },
-  { x: 36, y: 44, level: 4 },
-  { x: 48, y: 60, level: 5, icon: "jellyfish" },  // Jellyfish Jungle
-  { x: 62, y: 48, level: 6, icon: "signpost" },
-  { x: 76, y: 34, level: 7 },
-  { x: 90, y: 48, level: 8 },
-];
-
+const baseNodes = [{
+  x: 7,
+  y: 70,
+  level: 1
+}, {
+  x: 14,
+  y: 50,
+  level: 2
+}, {
+  x: 24,
+  y: 34,
+  level: 3
+}, {
+  x: 36,
+  y: 44,
+  level: 4
+}, {
+  x: 48,
+  y: 60,
+  level: 5,
+  icon: "jellyfish"
+},
+// Jellyfish Jungle
+{
+  x: 62,
+  y: 48,
+  level: 6,
+  icon: "signpost"
+}, {
+  x: 76,
+  y: 34,
+  level: 7
+}, {
+  x: 90,
+  y: 48,
+  level: 8
+}];
 const Home = () => {
   const navigate = useNavigate();
-  const { completedLevels, resetProgress } = useGameProgress();
-  
+  const {
+    completedLevels,
+    resetProgress
+  } = useGameProgress();
   const handleLogoClick = () => {
     resetProgress();
     navigate("/");
@@ -61,38 +89,21 @@ const Home = () => {
     // For future levels, return appropriate routes
     return "/describe-exercise";
   };
-
-  return (
-    <div className="min-h-screen bg-background relative overflow-x-auto overflow-y-hidden">
+  return <div className="min-h-screen bg-background relative overflow-x-auto overflow-y-hidden">
       {/* Scrollable content wrapper - wider than viewport */}
       <div className="relative min-w-[1600px] w-[150vw] h-screen">
         
         {/* Background wave patterns */}
-        <svg 
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          viewBox="0 0 2400 900"
-          preserveAspectRatio="xMidYMid slice"
-        >
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 2400 900" preserveAspectRatio="xMidYMid slice">
           {/* Light wave background */}
-          <path 
-            d="M-100 450 Q300 250 600 400 T1200 350 T1800 450 T2400 400 T3000 450 L3000 1000 L-100 1000 Z" 
-            fill="hsl(168 45% 72% / 0.4)"
-          />
+          <path d="M-100 450 Q300 250 600 400 T1200 350 T1800 450 T2400 400 T3000 450 L3000 1000 L-100 1000 Z" fill="hsl(168 45% 72% / 0.4)" />
           {/* Second wave layer */}
-          <path 
-            d="M-100 550 Q400 400 700 500 T1300 450 T1900 550 T2500 500 L3000 1000 L-100 1000 Z" 
-            fill="hsl(168 45% 68% / 0.3)"
-          />
+          <path d="M-100 550 Q400 400 700 500 T1300 450 T1900 550 T2500 500 L3000 1000 L-100 1000 Z" fill="hsl(168 45% 68% / 0.3)" />
         </svg>
 
         {/* Progress path - curved line connecting all nodes */}
-        <svg 
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-        >
-          <path 
-            d="M -5 70 
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M -5 70 
                Q 10 70 14 50 
                T 24 34 
                T 36 44 
@@ -100,112 +111,38 @@ const Home = () => {
                T 62 48 
                T 76 34 
                T 90 48
-               T 110 55" 
-            stroke="hsl(181 69% 36% / 0.18)"
-            strokeWidth="1.8"
-            fill="none"
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            style={{ strokeWidth: '22px' }}
-          />
+               T 110 55" stroke="hsl(181 69% 36% / 0.18)" strokeWidth="1.8" fill="none" strokeLinecap="round" vectorEffect="non-scaling-stroke" style={{
+          strokeWidth: '22px'
+        }} />
         </svg>
 
         {/* Progress nodes */}
         {baseNodes.map((node, index) => {
-          const nodeType = getNodeType(node.level, node.icon);
-          
-          return (
-            <div
-              key={index}
-              className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
-              style={{ left: `${node.x}%`, top: `${node.y}%` }}
-            >
-              {nodeType === "completed" && (
-                <img 
-                  src={checkCircle} 
-                  alt="Completed" 
-                  className="w-16 h-16 md:w-20 md:h-20 drop-shadow-lg cursor-pointer hover:scale-110 transition-transform" 
-                />
-              )}
-              {nodeType === "current" && (
-                <button 
-                  onClick={() => navigate(getCurrentLevelRoute())}
-                  className="transition-transform hover:scale-110 active:scale-95"
-                >
-                  <img 
-                    src={playButtonHome} 
-                    alt="Play" 
-                    className="w-20 h-20 md:w-28 md:h-28 drop-shadow-xl" 
-                  />
-                </button>
-              )}
-              {nodeType === "locked-jellyfish" && (
-                <img 
-                  src={lockedJellyfish} 
-                  alt="Locked" 
-                  className="w-14 h-14 md:w-16 md:h-16 drop-shadow-lg opacity-90" 
-                />
-              )}
-              {nodeType === "locked-signpost" && (
-                <img 
-                  src={lockedSignpost} 
-                  alt="Locked" 
-                  className="w-14 h-14 md:w-16 md:h-16 drop-shadow-lg opacity-90" 
-                />
-              )}
-              {nodeType === "locked" && (
-                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[hsl(200_10%_75%)] border-4 border-[hsl(200_10%_65%)] drop-shadow-lg opacity-80" />
-              )}
-            </div>
-          );
-        })}
+        const nodeType = getNodeType(node.level, node.icon);
+        return <div key={index} className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto" style={{
+          left: `${node.x}%`,
+          top: `${node.y}%`
+        }}>
+              {nodeType === "completed" && <img src={checkCircle} alt="Completed" className="w-16 h-16 md:w-20 md:h-20 drop-shadow-lg cursor-pointer hover:scale-110 transition-transform" />}
+              {nodeType === "current" && <button onClick={() => navigate(getCurrentLevelRoute())} className="transition-transform hover:scale-110 active:scale-95">
+                  <img src={playButtonHome} alt="Play" className="w-20 h-20 md:w-28 md:h-28 drop-shadow-xl" />
+                </button>}
+              {nodeType === "locked-jellyfish" && <img src={lockedJellyfish} alt="Locked" className="w-14 h-14 md:w-16 md:h-16 drop-shadow-lg opacity-90" />}
+              {nodeType === "locked-signpost" && <img src={lockedSignpost} alt="Locked" className="w-14 h-14 md:w-16 md:h-16 drop-shadow-lg opacity-90" />}
+              {nodeType === "locked" && <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[hsl(200_10%_75%)] border-4 border-[hsl(200_10%_65%)] drop-shadow-lg opacity-80" />}
+            </div>;
+      })}
 
         {/* Seaweed decorations - multiple across the bottom */}
-        <img 
-          src={seaweedTallLeft} 
-          alt="" 
-          className="absolute left-[2%] bottom-0 w-12 md:w-20 h-auto animate-sway origin-bottom z-10"
-        />
-        <img 
-          src={seaweedCurly} 
-          alt="" 
-          className="absolute left-[12%] bottom-0 w-8 md:w-14 h-auto animate-sway-delayed origin-bottom z-10"
-        />
-        <img 
-          src={seaweedLeft} 
-          alt="" 
-          className="absolute left-[22%] bottom-0 w-10 md:w-16 h-auto animate-sway origin-bottom z-10"
-        />
-        <img 
-          src={seaweedRight} 
-          alt="" 
-          className="absolute left-[35%] bottom-0 w-14 md:w-24 h-auto animate-sway-delayed origin-bottom z-10"
-        />
-        <img 
-          src={seaweedTallRight} 
-          alt="" 
-          className="absolute left-[48%] bottom-0 w-10 md:w-18 h-auto animate-sway origin-bottom z-10"
-        />
-        <img 
-          src={seaweedCurly} 
-          alt="" 
-          className="absolute left-[60%] bottom-0 w-12 md:w-20 h-auto animate-sway-delayed origin-bottom z-10"
-        />
-        <img 
-          src={seaweedLeft} 
-          alt="" 
-          className="absolute left-[72%] bottom-0 w-8 md:w-12 h-auto animate-sway origin-bottom z-10"
-        />
-        <img 
-          src={seaweedTallLeft} 
-          alt="" 
-          className="absolute left-[82%] bottom-0 w-14 md:w-24 h-auto animate-sway-delayed origin-bottom z-10"
-        />
-        <img 
-          src={seaweedRight} 
-          alt="" 
-          className="absolute right-[3%] bottom-0 w-16 md:w-28 h-auto animate-sway origin-bottom z-10"
-        />
+        <img src={seaweedTallLeft} alt="" className="absolute left-[2%] bottom-0 w-12 md:w-20 h-auto animate-sway origin-bottom z-10" />
+        <img src={seaweedCurly} alt="" className="absolute left-[12%] bottom-0 w-8 md:w-14 h-auto animate-sway-delayed origin-bottom z-10" />
+        <img src={seaweedLeft} alt="" className="absolute left-[22%] bottom-0 w-10 md:w-16 h-auto animate-sway origin-bottom z-10" />
+        <img src={seaweedRight} alt="" className="absolute left-[35%] bottom-0 w-14 md:w-24 h-auto animate-sway-delayed origin-bottom z-10" />
+        <img src={seaweedTallRight} alt="" className="absolute left-[48%] bottom-0 w-10 md:w-18 h-auto animate-sway origin-bottom z-10" />
+        <img src={seaweedCurly} alt="" className="absolute left-[60%] bottom-0 w-12 md:w-20 h-auto animate-sway-delayed origin-bottom z-10" />
+        <img src={seaweedLeft} alt="" className="absolute left-[72%] bottom-0 w-8 md:w-12 h-auto animate-sway origin-bottom z-10" />
+        <img src={seaweedTallLeft} alt="" className="absolute left-[82%] bottom-0 w-14 md:w-24 h-auto animate-sway-delayed origin-bottom z-10" />
+        <img src={seaweedRight} alt="" className="absolute right-[3%] bottom-0 w-16 md:w-28 h-auto animate-sway origin-bottom z-10" />
       </div>
 
       {/* Background fish - behind everything */}
@@ -215,16 +152,12 @@ const Home = () => {
       <header className="fixed top-0 left-0 right-0 z-20 px-4 md:px-8 py-3 flex items-center justify-between">
         {/* Logo - clickable to reset and go back to start */}
         <button onClick={handleLogoClick} className="hover:opacity-80 transition-opacity">
-          <img 
-            src={eloquaLogo} 
-            alt="ELOQUA" 
-            className="h-10 md:h-14 w-auto"
-          />
+          <img src={eloquaLogo} alt="ELOQUA" className="h-10 md:h-14 w-auto" />
         </button>
 
         {/* Nav bar - wider, extends between logo and profile */}
-        <nav className="flex-1 mx-4 md:mx-8 flex items-center justify-between bg-[hsl(181_69%_42%)] rounded-full px-6 md:px-10 py-2 md:py-2.5 shadow-lg">
-          <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors">
+        <nav className="flex-1 mx-4 flex items-center justify-between bg-[hsl(181_69%_42%)] rounded-full md:px-10 py-2 md:py-2.5 shadow-lg md:mx-0 px-[70px]">
+          <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors mx-[40px]">
             <img src={trophyIcon} alt="Trophies" className="w-6 h-6 md:w-8 md:h-8" />
           </button>
           <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors">
@@ -242,8 +175,6 @@ const Home = () => {
         {/* Profile circle */}
         <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-accent border-4 border-white/20 shadow-lg" />
       </header>
-    </div>
-  );
+    </div>;
 };
-
 export default Home;
