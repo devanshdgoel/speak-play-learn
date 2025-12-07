@@ -9,11 +9,11 @@ import { useGameProgress } from "@/hooks/useGameProgress";
 
 const GameComplete = () => {
   const navigate = useNavigate();
-  const { completeLevel } = useGameProgress();
+  const { completeCurrentLevel } = useGameProgress();
 
-  // Mark Jellyfish Jungle (level 5) as complete when this page loads
+  // Mark current level as complete when this page loads
   useEffect(() => {
-    completeLevel(5);
+    completeCurrentLevel();
   }, []);
 
   return (
