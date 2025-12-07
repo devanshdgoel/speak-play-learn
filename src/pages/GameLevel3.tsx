@@ -14,13 +14,13 @@ import { useGameProgress } from "@/hooks/useGameProgress";
 // Words with "ll" in the middle
 const WORDS = ["Balloon", "Pillow", "Yellow", "Jello", "Mellow"];
 
-// Pearl positions around the screen
+// Pearl positions - on sides only, not behind center jellyfish
 const PEARL_POSITIONS = [
-  { top: "25%", left: "20%" },
-  { top: "35%", left: "70%" },
-  { top: "20%", left: "45%" },
-  { top: "45%", left: "15%" },
-  { top: "40%", left: "80%" },
+  { top: "25%", left: "8%" },
+  { top: "35%", left: "75%" },
+  { top: "45%", left: "12%" },
+  { top: "30%", left: "82%" },
+  { top: "55%", left: "5%" },
 ];
 
 const GameLevel3 = () => {

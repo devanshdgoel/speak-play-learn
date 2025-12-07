@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import eloquaLogo from "@/assets/eloqua-title.svg";
 import jellyfish from "@/assets/jellyfish.svg";
 import backArrow from "@/assets/back-arrow.svg";
@@ -9,16 +9,64 @@ import coralOrange from "@/assets/coral-orange.png";
 import coralPink from "@/assets/coral-pink.png";
 import seaweedCurly from "@/assets/seaweed-curly.svg";
 import BackgroundFish from "@/components/BackgroundFish";
+import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
+import { useGameProgress } from "@/hooks/useGameProgress";
+
+const CORAL_STOPS = [
+  { id: 0, word: "FALL", x: "8%", bottom: "32%" },
+  { id: 1, word: "BALL", x: "38%", bottom: "28%" },
+  { id: 2, word: "SHELL", x: "68%", bottom: "35%" },
+];
 
 const GameLevel4 = () => {
   const navigate = useNavigate();
-  const [progress] = useState(95);
+  const { resetProgress } = useGameProgress();
+  const { isListening, transcript, error, startListening, stopListening, resetTranscript } = useSpeechRecognition();
+  
+  const [currentPosition, setCurrentPosition] = useState(0);
+  const [isJumping, setIsJumping] = useState(false);
+  const [gameState, setGameState] = useState<"ready" | "listening" | "complete">("ready");
+  const [completedWords, setCompletedWords] = useState<Set<number>>(new Set());
 
-  const jellyfishStops = [
-    { id: 1, word: "FALL", x: "5%", bottom: "38%" },
-    { id: 2, word: "BALL", x: "38%", bottom: "32%" },
-    { id: 3, word: "SHELL", x: "72%", bottom: "40%" },
-  ];
+  const handleLogoClick = () => {
+    resetProgress();
+    navigate("/");
+  };
+
+  // Check transcript for current word
+  useEffect(() => {
+    if (!transcript || !isListening || isJumping) return;
+
+    const lowerTranscript = transcript.toLowerCase();
+    const currentWord = CORAL_STOPS[currentPosition]?.word.toLowerCase();
+
+    if (currentWord && lowerTranscript.includes(currentWord)) {
+      // Word detected! Jump to next coral
+      setIsJumping(true);
+      setCompletedWords(prev => new Set([...prev, currentPosition]));
+      resetTranscript();
+
+      setTimeout(() => {
+        if (currentPosition + 1 >= CORAL_STOPS.length) {
+          // Last word - complete the game
+          setGameState("complete");
+          stopListening();
+        } else {
+          setCurrentPosition(prev => prev + 1);
+        }
+        setIsJumping(false);
+      }, 600);
+    }
+  }, [transcript, isListening, currentPosition, isJumping, resetTranscript, stopListening]);
+
+  const handleStartListening = () => {
+    resetTranscript();
+    setGameState("listening");
+    startListening();
+  };
+
+  const progress = 35 + (completedWords.size / CORAL_STOPS.length) * 65;
+  const currentStop = CORAL_STOPS[currentPosition];
 
   return (
     <div 
@@ -40,13 +88,6 @@ const GameLevel4 = () => {
       {/* Background fish */}
       <BackgroundFish />
 
-      {/* Small fish group - right side */}
-      <div className="absolute right-[18%] bottom-[45%] z-[3] flex gap-1">
-        <div className="w-3 h-2 bg-[hsl(210_80%_45%)] rounded-full" style={{ clipPath: "polygon(0 50%, 100% 0, 100% 100%)" }} />
-        <div className="w-3 h-2 bg-[hsl(210_80%_45%)] rounded-full" style={{ clipPath: "polygon(0 50%, 100% 0, 100% 100%)" }} />
-        <div className="w-3 h-2 bg-[hsl(210_80%_45%)] rounded-full mt-1" style={{ clipPath: "polygon(0 50%, 100% 0, 100% 100%)" }} />
-      </div>
-
       {/* Seaweed decorations - small */}
       <img 
         src={seaweedCurly} 
@@ -59,7 +100,7 @@ const GameLevel4 = () => {
         className="absolute right-[-1%] bottom-0 h-[22%] w-auto animate-sway-delayed origin-bottom opacity-60 scale-x-[-1]"
       />
 
-      {/* Coral decorations at bottom - matching reference positions */}
+      {/* Coral decorations at bottom */}
       <img 
         src={coralPink} 
         alt="" 
@@ -78,7 +119,7 @@ const GameLevel4 = () => {
 
       {/* Header */}
       <header className="relative z-20 px-4 md:px-8 py-4 flex items-center justify-between">
-        <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity">
+        <button onClick={handleLogoClick} className="hover:opacity-80 transition-opacity">
           <img src={eloquaLogo} alt="ELOQUA" className="h-8 md:h-12 w-auto" />
         </button>
         <h1 className="font-fredoka font-bold text-xl md:text-2xl text-white italic">
@@ -113,73 +154,176 @@ const GameLevel4 = () => {
       {/* Instruction text */}
       <div className="relative z-20 px-4 md:px-8 py-4">
         <p className="font-fredoka text-lg md:text-xl text-white/90 italic">
-          Say the 'LL' word to make the jelly fish bounce on the coral!
+          Say the word to make the jellyfish jump to the next coral!
         </p>
+        {error && (
+          <p className="font-fredoka text-sm text-red-300 mt-2">{error}</p>
+        )}
       </div>
 
-      {/* Game area with jellyfish and bounce paths */}
+      {/* Live transcript display */}
+      {isListening && transcript && (
+        <div className="absolute top-44 left-1/2 -translate-x-1/2 z-30 bg-white/90 rounded-2xl px-6 py-3 max-w-md animate-fade-in">
+          <p className="font-fredoka text-base text-[hsl(200_50%_25%)] text-center">
+            "{transcript}"
+          </p>
+        </div>
+      )}
+
+      {/* Game area with coral platforms */}
       <div className="relative z-10 w-full" style={{ height: "calc(100vh - 260px)" }}>
-        {jellyfishStops.map((stop, index) => (
-          <div key={stop.id} className="absolute flex flex-col items-center" style={{ left: stop.x, bottom: stop.bottom }}>
-            {/* Word label */}
-            <span className="font-fredoka font-bold text-xl md:text-2xl text-white whitespace-nowrap mb-1">
-              {stop.word}
-            </span>
-            
-            {/* Star marker */}
-            <div className="w-7 h-7 rounded-full bg-[hsl(195_50%_30%)] flex items-center justify-center mb-1">
-              <span className="text-yellow-400 text-sm">★</span>
+        {/* Coral platforms with words */}
+        {CORAL_STOPS.map((stop, index) => {
+          const isCompleted = completedWords.has(index);
+          const isCurrent = index === currentPosition;
+
+          return (
+            <div 
+              key={stop.id} 
+              className="absolute flex flex-col items-center"
+              style={{ left: stop.x, bottom: stop.bottom }}
+            >
+              {/* Word label */}
+              <span className={`font-fredoka font-bold text-xl md:text-2xl mb-2 transition-all duration-300 ${
+                isCompleted 
+                  ? 'text-green-400 line-through opacity-50' 
+                  : isCurrent 
+                    ? 'text-yellow-300 animate-pulse' 
+                    : 'text-white/50'
+              }`}>
+                {stop.word}
+              </span>
+              
+              {/* Star marker */}
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 transition-all duration-300 ${
+                isCompleted ? 'bg-yellow-400' : 'bg-[hsl(195_50%_30%)]'
+              }`}>
+                <span className={`text-lg ${isCompleted ? 'text-white' : 'text-yellow-400'}`}>★</span>
+              </div>
+              
+              {/* Bounce path (dashed arc) - connects to next stop */}
+              {index < CORAL_STOPS.length - 1 && (
+                <svg 
+                  className="absolute pointer-events-none"
+                  style={{ 
+                    left: "100%", 
+                    top: "-20%",
+                    width: "150px",
+                    height: "100px"
+                  }}
+                  viewBox="0 0 150 100"
+                  preserveAspectRatio="none"
+                >
+                  <path 
+                    d="M0 80 Q75 0 150 80" 
+                    fill="none" 
+                    stroke="white" 
+                    strokeWidth="2" 
+                    strokeDasharray="6 6"
+                    opacity={isCurrent ? "0.8" : "0.3"}
+                  />
+                </svg>
+              )}
+              
+              {/* Coral platform */}
+              <img 
+                src={coralTeal} 
+                alt="" 
+                className="w-28 h-auto md:w-36 lg:w-40"
+              />
             </div>
-            
-            {/* Bounce path (dashed arc) - connects to next stop */}
-            {index < jellyfishStops.length - 1 && (
-              <svg 
-                className="absolute pointer-events-none"
-                style={{ 
-                  left: "100%", 
-                  top: "15%",
-                  width: index === 0 ? "180px" : "200px",
-                  height: "80px"
-                }}
-                viewBox="0 0 180 80"
-                preserveAspectRatio="none"
-              >
-                <path 
-                  d="M0 70 Q90 0 180 70" 
-                  fill="none" 
-                  stroke="white" 
-                  strokeWidth="2" 
-                  strokeDasharray="6 6"
-                  opacity="0.5"
-                />
-              </svg>
-            )}
-            
-            {/* Jellyfish */}
+          );
+        })}
+
+        {/* Single jellyfish that jumps between corals */}
+        {gameState !== "complete" && currentStop && (
+          <div 
+            className={`absolute transition-all duration-500 ease-out z-20 ${isJumping ? 'scale-110' : ''}`}
+            style={{ 
+              left: `calc(${currentStop.x} + 3%)`,
+              bottom: `calc(${currentStop.bottom} + 12%)`,
+              transform: isJumping ? 'translateY(-60px)' : 'translateY(0)',
+            }}
+          >
             <img 
               src={jellyfish} 
               alt="Jellyfish" 
-              className="w-16 h-auto md:w-20 animate-float drop-shadow-lg"
-              style={{ animationDelay: `${index * 0.2}s` }}
-            />
-            
-            {/* Coral platform - much larger */}
-            <img 
-              src={coralTeal} 
-              alt="" 
-              className="w-32 h-auto md:w-40 lg:w-44 mt-2"
+              className={`w-20 h-auto md:w-24 drop-shadow-lg ${isJumping ? '' : 'animate-float'}`}
             />
           </div>
-        ))}
+        )}
+
+        {/* Jellyfish flying away animation when complete */}
+        {gameState === "complete" && (
+          <div 
+            className="absolute z-20 animate-[flyAway_1s_ease-out_forwards]"
+            style={{ 
+              left: '75%',
+              bottom: '50%',
+            }}
+          >
+            <img 
+              src={jellyfish} 
+              alt="Jellyfish" 
+              className="w-20 h-auto md:w-24 drop-shadow-lg"
+            />
+          </div>
+        )}
       </div>
 
-      {/* Test button - Complete */}
-      <button
-        onClick={() => navigate("/game-complete")}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 px-6 py-3 bg-accent text-white font-fredoka font-bold rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform"
-      >
-        Complete →
-      </button>
+      {/* Start button */}
+      {gameState === "ready" && (
+        <button
+          onClick={handleStartListening}
+          className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30"
+        >
+          <div className="relative">
+            <div className="absolute top-2 left-0 right-0 h-14 bg-[#112C55] rounded-full" />
+            <div className="relative bg-[hsl(181_69%_42%)] hover:bg-[hsl(181_69%_38%)] text-white font-fredoka font-bold text-xl px-10 py-4 rounded-full shadow-lg transition-colors flex items-center gap-3">
+              🎤 Start Speaking
+            </div>
+          </div>
+        </button>
+      )}
+
+      {/* Listening state */}
+      {gameState === "listening" && (
+        <button
+          onClick={stopListening}
+          className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30"
+        >
+          <div className="relative">
+            <div className="absolute top-2 left-0 right-0 h-14 bg-[#112C55] rounded-full" />
+            <div className="relative bg-[hsl(var(--coral))] text-white font-fredoka font-bold text-xl px-10 py-4 rounded-full shadow-lg flex items-center gap-3">
+              <span className="w-4 h-4 bg-white rounded-full animate-pulse" />
+              Say: {currentStop?.word}
+            </div>
+          </div>
+        </button>
+      )}
+
+      {/* Complete state */}
+      {gameState === "complete" && (
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-4 animate-fade-in">
+          <p className="font-fredoka text-2xl text-yellow-300 font-bold">🎉 Level Complete!</p>
+          <button onClick={() => navigate("/game-complete")}>
+            <div className="relative">
+              <div className="absolute top-2 left-0 right-0 h-14 bg-[#112C55] rounded-full" />
+              <div className="relative bg-accent hover:bg-accent/90 text-white font-fredoka font-bold text-xl px-10 py-4 rounded-full shadow-lg transition-colors flex items-center gap-3 animate-bounce">
+                Complete Game →
+              </div>
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* Add keyframes for fly away animation */}
+      <style>{`
+        @keyframes flyAway {
+          0% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(100px, -200px) scale(0.5); opacity: 0; }
+        }
+      `}</style>
     </div>
   );
 };
