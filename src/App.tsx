@@ -11,6 +11,7 @@ import GameLevel2 from "./pages/GameLevel2";
 import GameLevel3 from "./pages/GameLevel3";
 import GameLevel4 from "./pages/GameLevel4";
 import GameComplete from "./pages/GameComplete";
+import DescribeExercise from "./pages/DescribeExercise";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/game-level-3" element={<GameLevel3 />} />
           <Route path="/game-level-4" element={<GameLevel4 />} />
           <Route path="/game-complete" element={<GameComplete />} />
+          <Route path="/describe-exercise" element={<DescribeExercise />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
