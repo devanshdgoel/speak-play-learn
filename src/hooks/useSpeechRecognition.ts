@@ -9,40 +9,12 @@ interface SpeechRecognitionHook {
   resetTranscript: () => void;
 }
 
-// Extend Window interface for SpeechRecognition
-interface SpeechRecognitionEvent extends Event {
-  results: SpeechRecognitionResultList;
-  resultIndex: number;
-}
-
-interface SpeechRecognitionResultList {
-  length: number;
-  item(index: number): SpeechRecognitionResult;
-  [index: number]: SpeechRecognitionResult;
-}
-
-interface SpeechRecognitionResult {
-  isFinal: boolean;
-  length: number;
-  item(index: number): SpeechRecognitionAlternative;
-  [index: number]: SpeechRecognitionAlternative;
-}
-
-interface SpeechRecognitionAlternative {
-  transcript: string;
-  confidence: number;
-}
-
-interface SpeechRecognitionErrorEvent extends Event {
-  error: string;
-  message: string;
-}
-
 export const useSpeechRecognition = (): SpeechRecognitionHook => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState<string | null>(null);
   const recognitionRef = useRef<any>(null);
+  const finalTranscriptRef = useRef('');
 
   useEffect(() => {
     // Check for browser support
@@ -58,28 +30,25 @@ export const useSpeechRecognition = (): SpeechRecognitionHook => {
     recognition.interimResults = true;
     recognition.lang = 'en-US';
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
-      let finalTranscript = '';
+    recognition.onresult = (event: any) => {
       let interimTranscript = '';
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
         if (result.isFinal) {
-          finalTranscript += result[0].transcript;
+          // Append final results to our accumulated final transcript
+          finalTranscriptRef.current += result[0].transcript + ' ';
         } else {
-          interimTranscript += result[0].transcript;
+          // Only show the latest interim result
+          interimTranscript = result[0].transcript;
         }
       }
 
-      setTranscript(prev => {
-        if (finalTranscript) {
-          return prev + finalTranscript;
-        }
-        return prev + interimTranscript;
-      });
+      // Display final transcript + current interim
+      setTranscript((finalTranscriptRef.current + interimTranscript).trim());
     };
 
-    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+    recognition.onerror = (event: any) => {
       console.error('Speech recognition error:', event.error);
       if (event.error === 'not-allowed') {
         setError('Microphone access denied. Please allow microphone access.');
@@ -108,6 +77,7 @@ export const useSpeechRecognition = (): SpeechRecognitionHook => {
     if (recognitionRef.current && !isListening) {
       setError(null);
       setTranscript('');
+      finalTranscriptRef.current = '';
       try {
         recognitionRef.current.start();
         setIsListening(true);
@@ -126,6 +96,7 @@ export const useSpeechRecognition = (): SpeechRecognitionHook => {
 
   const resetTranscript = useCallback(() => {
     setTranscript('');
+    finalTranscriptRef.current = '';
   }, []);
 
   return {

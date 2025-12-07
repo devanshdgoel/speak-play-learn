@@ -1,16 +1,70 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import eloquaLogo from "@/assets/eloqua-title.svg";
 import jellyfish from "@/assets/jellyfish.svg";
 import backArrow from "@/assets/back-arrow.svg";
 import seaweedLeft from "@/assets/seaweed-tall-left.svg";
 import seaweedRight from "@/assets/seaweed-tall-right.svg";
 import BackgroundFish from "@/components/BackgroundFish";
+import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
+import { useGameProgress } from "@/hooks/useGameProgress";
 
 const Game = () => {
   const navigate = useNavigate();
-  const [progress] = useState(35); // Progress percentage
-  const [powerLevel] = useState(20); // Power meter percentage
+  const { resetProgress } = useGameProgress();
+  const { isListening, transcript, error, startListening, stopListening, resetTranscript } = useSpeechRecognition();
+  
+  const [progress, setProgress] = useState(35);
+  const [powerLevel, setPowerLevel] = useState(0);
+  const [jellyfishY, setJellyfishY] = useState(0);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [gameState, setGameState] = useState<"ready" | "listening" | "success">("ready");
+
+  const handleLogoClick = () => {
+    resetProgress();
+    navigate("/");
+  };
+
+  // Detect "LAA" sound in transcript and update power level
+  useEffect(() => {
+    if (!transcript) return;
+    
+    const lowerTranscript = transcript.toLowerCase();
+    
+    // Check for variations of "laa" sound
+    const hasLaaSound = 
+      lowerTranscript.includes("la") || 
+      lowerTranscript.includes("laa") ||
+      lowerTranscript.includes("laaa") ||
+      lowerTranscript.includes("law") ||
+      lowerTranscript.includes("lar");
+    
+    if (hasLaaSound && isListening) {
+      // Calculate power based on how much "laa" content there is
+      const laaCount = (lowerTranscript.match(/la+/gi) || []).length;
+      const newPower = Math.min(100, laaCount * 25);
+      setPowerLevel(newPower);
+      
+      // Move jellyfish up based on power
+      setJellyfishY(-Math.min(150, newPower * 1.5));
+      
+      // Check for success
+      if (newPower >= 75) {
+        setIsCompleted(true);
+        setGameState("success");
+        stopListening();
+        setProgress(100);
+      }
+    }
+  }, [transcript, isListening, stopListening]);
+
+  const handleStartListening = () => {
+    resetTranscript();
+    setPowerLevel(0);
+    setJellyfishY(0);
+    setGameState("listening");
+    startListening();
+  };
 
   return (
     <div 
@@ -47,7 +101,7 @@ const Game = () => {
       {/* Header */}
       <header className="relative z-20 px-4 md:px-8 py-4 flex items-center justify-between">
         {/* Logo */}
-        <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity">
+        <button onClick={handleLogoClick} className="hover:opacity-80 transition-opacity">
           <img 
             src={eloquaLogo} 
             alt="ELOQUA" 
@@ -88,12 +142,24 @@ const Game = () => {
         <p className="font-fredoka text-lg md:text-xl text-white/90 italic">
           Say <span className="font-bold text-white">LAAA</span> to lift the jellyfish up!
         </p>
+        {error && (
+          <p className="font-fredoka text-sm text-red-300 mt-2">{error}</p>
+        )}
       </div>
+
+      {/* Live transcript display */}
+      {isListening && transcript && (
+        <div className="absolute top-40 left-1/2 -translate-x-1/2 z-30 bg-white/90 rounded-2xl px-6 py-3 max-w-md animate-fade-in">
+          <p className="font-fredoka text-base text-[hsl(200_50%_25%)] text-center">
+            "{transcript}"
+          </p>
+        </div>
+      )}
 
       {/* Star reward indicator */}
       <div className="absolute top-[28%] right-[25%] z-20">
-        <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[hsl(180_30%_75%)] flex items-center justify-center shadow-lg">
-          <svg viewBox="0 0 24 24" className="w-8 h-8 md:w-10 md:h-10 fill-yellow-300">
+        <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-lg transition-all duration-500 ${isCompleted ? 'bg-yellow-400 scale-125' : 'bg-[hsl(180_30%_75%)]'}`}>
+          <svg viewBox="0 0 24 24" className={`w-8 h-8 md:w-10 md:h-10 transition-colors ${isCompleted ? 'fill-white' : 'fill-yellow-300'}`}>
             <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
           </svg>
         </div>
@@ -113,13 +179,17 @@ const Game = () => {
         </div>
 
         {/* Main jellyfish with glow */}
-        <div className="relative">
+        <div 
+          className="relative transition-transform duration-300"
+          style={{ transform: `translateY(${jellyfishY}px)` }}
+        >
           {/* Glow effect */}
           <div 
-            className="absolute inset-0 blur-3xl opacity-50 rounded-full"
+            className="absolute inset-0 blur-3xl rounded-full transition-opacity duration-300"
             style={{ 
-              background: "radial-gradient(circle, hsl(200 60% 60% / 0.5) 0%, transparent 70%)",
-              transform: "scale(1.8)"
+              background: `radial-gradient(circle, hsl(200 60% 60% / ${0.3 + powerLevel * 0.007}) 0%, transparent 70%)`,
+              transform: "scale(1.8)",
+              opacity: 0.5 + powerLevel * 0.005
             }}
           />
           <img 
@@ -140,13 +210,36 @@ const Game = () => {
         </div>
       </div>
 
-      {/* Test button - Next Level */}
-      <button
-        onClick={() => navigate("/game-level-2")}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 px-6 py-3 bg-accent text-white font-fredoka font-bold rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform"
-      >
-        Next Level →
-      </button>
+      {/* Start listening button - only show when ready */}
+      {gameState === "ready" && (
+        <button
+          onClick={handleStartListening}
+          className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 px-8 py-4 bg-[hsl(181_69%_42%)] text-white font-fredoka font-bold text-xl rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform"
+        >
+          🎤 Start Speaking
+        </button>
+      )}
+
+      {/* Listening indicator */}
+      {gameState === "listening" && (
+        <button
+          onClick={stopListening}
+          className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 px-8 py-4 bg-[hsl(var(--coral))] text-white font-fredoka font-bold text-xl rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform flex items-center gap-3"
+        >
+          <span className="w-4 h-4 bg-white rounded-full animate-pulse" />
+          Listening...
+        </button>
+      )}
+
+      {/* Success - Next Level button */}
+      {isCompleted && (
+        <button
+          onClick={() => navigate("/game-level-2")}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 px-8 py-4 bg-accent text-white font-fredoka font-bold text-xl rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform animate-bounce"
+        >
+          ✨ Next Level →
+        </button>
+      )}
 
       {/* Fish school bottom right */}
       <div className="absolute bottom-[8%] right-[10%] z-10 flex gap-2">
