@@ -8,8 +8,7 @@ const Exercise = () => {
   const navigate = useNavigate();
 
   const handleEnter = () => {
-    // Navigate to the actual exercise/game
-    console.log("Entering exercise...");
+    navigate("/game");
   };
 
   return (
