@@ -5,21 +5,22 @@ import jellyfish from "@/assets/jellyfish.svg";
 import backArrow from "@/assets/back-arrow.svg";
 import seaweedLeft from "@/assets/seaweed-tall-left.svg";
 import seaweedRight from "@/assets/seaweed-tall-right.svg";
-import bubbleLeaf from "@/assets/bubble-leaf.png";
-import bubbleLion from "@/assets/bubble-lion.png";
-import bubbleLamp from "@/assets/bubble-lamp.png";
-import bubbleLadybug from "@/assets/bubble-ladybug.png";
+import jellyfishTreasure from "@/assets/jellyfish-treasure.png";
+import bubbleSmall from "@/assets/bubble-small.png";
 import BackgroundFish from "@/components/BackgroundFish";
 
-const GameLevel2 = () => {
+const GameLevel3 = () => {
   const navigate = useNavigate();
-  const [progress] = useState(70); // Progress increased from level 1
+  const [progress] = useState(85); // Progress increased from level 2
 
+  // Floating bubbles with one having a word
   const bubbles = [
-    { id: 1, image: bubbleLeaf, word: "Leaf", position: { top: "25%", left: "12%" } },
-    { id: 2, image: bubbleLadybug, word: "Ladybug", position: { top: "18%", left: "38%" } },
-    { id: 3, image: bubbleLamp, word: "Lamp", position: { top: "25%", left: "65%" } },
-    { id: 4, image: bubbleLion, word: "Lion", position: { top: "48%", left: "28%" } },
+    { id: 1, position: { top: "35%", left: "50%" }, hasWord: false },
+    { id: 2, position: { top: "50%", left: "60%" }, hasWord: true, word: "Balloon" },
+    { id: 3, position: { top: "55%", left: "65%" }, hasWord: false },
+    { id: 4, position: { top: "30%", left: "25%" }, hasWord: false },
+    { id: 5, position: { top: "45%", left: "80%" }, hasWord: false },
+    { id: 6, position: { top: "60%", left: "35%" }, hasWord: false },
   ];
 
   return (
@@ -96,7 +97,7 @@ const GameLevel2 = () => {
       <div className="relative z-20 px-4 md:px-8 py-2 flex items-center gap-4">
         {/* Back button */}
         <button 
-          onClick={() => navigate("/game")}
+          onClick={() => navigate("/game-level-2")}
           className="hover:scale-110 active:scale-95 transition-transform"
         >
           <img src={backArrow} alt="Back" className="w-12 h-12 md:w-14 md:h-14" />
@@ -114,48 +115,55 @@ const GameLevel2 = () => {
       {/* Instruction text */}
       <div className="relative z-20 px-4 md:px-8 py-4">
         <p className="font-fredoka text-lg md:text-xl text-white/90 italic">
-          Say the word to pop the bubble!
+          Help jellyfish lift the treasure! Say the word that comes up for the jellyfish to collect the pearl.
         </p>
       </div>
 
-      {/* Bubbles area */}
-      <div className="relative z-10 w-full" style={{ height: "calc(100vh - 220px)" }}>
+      {/* Game area */}
+      <div className="relative z-10 w-full" style={{ height: "calc(100vh - 260px)" }}>
+        {/* Floating bubbles */}
         {bubbles.map((bubble) => (
           <div
             key={bubble.id}
-            className="absolute animate-float cursor-pointer hover:scale-110 transition-transform"
+            className="absolute animate-float"
             style={{ 
               top: bubble.position.top, 
               left: bubble.position.left,
+              animationDelay: `${bubble.id * 0.3}s`
             }}
           >
             <img 
-              src={bubble.image} 
-              alt={bubble.word}
-              className="w-28 h-28 md:w-36 md:h-36 lg:w-40 lg:h-40 drop-shadow-lg"
+              src={bubbleSmall} 
+              alt=""
+              className="w-8 h-8 md:w-10 md:h-10 drop-shadow-lg"
             />
+            {bubble.hasWord && (
+              <span className="absolute -right-16 top-1/2 -translate-y-1/2 font-fredoka font-bold text-lg md:text-xl text-[hsl(210_90%_50%)]">
+                {bubble.word}
+              </span>
+            )}
           </div>
         ))}
 
-      {/* Main jellyfish mascot - bottom right */}
-      <div className="absolute bottom-[5%] right-[15%] z-10">
-        <img 
-          src={jellyfish} 
-          alt="Jellyfish mascot" 
-          className="w-36 h-auto md:w-44 lg:w-52 drop-shadow-2xl animate-float"
-        />
+        {/* Main jellyfish with treasure chest - center */}
+        <div className="absolute bottom-[10%] left-1/2 -translate-x-1/2 z-10">
+          <img 
+            src={jellyfishTreasure} 
+            alt="Jellyfish with treasure" 
+            className="w-48 h-auto md:w-56 lg:w-64 drop-shadow-2xl animate-float"
+          />
+        </div>
       </div>
-    </div>
 
-    {/* Test button - Next Level */}
-    <button
-      onClick={() => navigate("/game-level-3")}
-      className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 px-6 py-3 bg-accent text-white font-fredoka font-bold rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform"
-    >
-      Next Level →
-    </button>
-  </div>
-);
+      {/* Test button - Next Level */}
+      <button
+        onClick={() => navigate("/home")}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 px-6 py-3 bg-accent text-white font-fredoka font-bold rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform"
+      >
+        Complete →
+      </button>
+    </div>
+  );
 };
 
-export default GameLevel2;
+export default GameLevel3;
