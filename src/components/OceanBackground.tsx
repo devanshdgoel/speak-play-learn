@@ -6,47 +6,47 @@ import seaweedRight from "@/assets/seaweed-right.svg";
 const OceanBackground = () => {
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none">
-      {/* Top right coral decoration */}
+      {/* Top right coral decoration - orange wavy ribbon coming from top-right corner */}
       <img 
         src={coralTop} 
         alt="" 
-        className="absolute -top-20 -right-40 w-[500px] md:w-[672px] h-auto opacity-90 rotate-12"
+        className="absolute -top-16 -right-20 w-[400px] md:w-[500px] lg:w-[600px] h-auto z-0"
+        style={{ transform: 'rotate(180deg) scaleX(-1)' }}
       />
       
-      {/* Bottom right coral decoration */}
+      {/* Bottom right coral decoration - orange wavy ribbon at bottom-right corner - behind seaweed */}
       <img 
         src={coralBottom} 
         alt="" 
-        className="absolute -bottom-20 -right-60 w-[500px] md:w-[700px] h-auto opacity-80 rotate-180"
+        className="absolute -bottom-8 right-8 w-[350px] md:w-[450px] lg:w-[550px] h-auto z-0"
+        style={{ transform: 'scaleX(-1)' }}
       />
       
-      {/* Wave layers */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 md:h-56">
-        <svg 
-          viewBox="0 0 1440 320" 
-          className="absolute bottom-32 w-full h-32 animate-wave"
-          preserveAspectRatio="none"
-        >
-          <path 
-            fill="hsl(var(--background-wave))" 
-            fillOpacity="0.6"
-            d="M0,160L48,144C96,128,192,96,288,106.7C384,117,480,171,576,176C672,181,768,139,864,128C960,117,1056,139,1152,154.7C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          />
-        </svg>
-      </div>
+      {/* Wave layer in the middle-bottom area */}
+      <svg 
+        viewBox="0 0 1440 200" 
+        className="absolute bottom-32 md:bottom-40 left-0 right-0 w-full h-24 md:h-32 animate-wave z-10"
+        preserveAspectRatio="none"
+      >
+        <path 
+          fill="hsl(var(--background-wave))" 
+          fillOpacity="0.5"
+          d="M0,80L60,90C120,100,240,120,360,115C480,110,600,80,720,75C840,70,960,90,1080,100C1200,110,1320,110,1380,110L1440,110L1440,200L1380,200C1320,200,1200,200,1080,200C960,200,840,200,720,200C600,200,480,200,360,200C240,200,120,200,60,200L0,200Z"
+        />
+      </svg>
       
-      {/* Bottom left seaweed */}
+      {/* Bottom left seaweed - in front */}
       <img 
         src={seaweedLeft} 
         alt="" 
-        className="absolute -bottom-48 -left-10 w-48 md:w-72 h-auto animate-sway origin-bottom"
+        className="absolute -bottom-8 -left-6 w-48 md:w-64 lg:w-80 h-auto animate-sway origin-bottom z-20"
       />
       
-      {/* Bottom right seaweed */}
+      {/* Bottom right seaweed - in front */}
       <img 
         src={seaweedRight} 
         alt="" 
-        className="absolute -bottom-32 right-10 w-32 md:w-44 h-auto animate-sway-delayed origin-bottom"
+        className="absolute -bottom-2 right-4 md:right-12 w-32 md:w-40 lg:w-48 h-auto animate-sway-delayed origin-bottom z-20"
       />
     </div>
   );
