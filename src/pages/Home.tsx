@@ -223,7 +223,7 @@ const Home = () => {
         </button>
 
         {/* Nav bar - wider, extends between logo and profile */}
-        <nav className="flex-1 mx-4 md:mx-8 flex items-center justify-center gap-2 md:gap-4 bg-[hsl(181_69%_42%)] rounded-full px-4 md:px-8 py-2 md:py-2.5 shadow-lg">
+        <nav className="flex-1 mx-4 md:mx-8 flex items-center justify-between bg-[hsl(181_69%_42%)] rounded-full px-6 md:px-10 py-2 md:py-2.5 shadow-lg">
           <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors">
             <img src={trophyIcon} alt="Trophies" className="w-6 h-6 md:w-8 md:h-8" />
           </button>
@@ -233,7 +233,7 @@ const Home = () => {
           <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors">
             <img src={settingsIcon} alt="Settings" className="w-6 h-6 md:w-8 md:h-8" />
           </button>
-          <div className="flex items-center gap-0.5 ml-2 md:ml-4">
+          <div className="flex items-center gap-1">
             <img src={fireStreak} alt="Streak" className="w-5 h-7 md:w-6 md:h-9" />
             <span className="text-white font-bold text-base md:text-lg">13</span>
           </div>
