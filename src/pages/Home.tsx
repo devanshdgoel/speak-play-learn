@@ -10,6 +10,9 @@ import lockedJellyfish from "@/assets/locked-jellyfish.svg";
 import lockedSignpost from "@/assets/locked-signpost.svg";
 import seaweedLeft from "@/assets/seaweed-left.svg";
 import seaweedRight from "@/assets/seaweed-right.svg";
+import seaweedTallLeft from "@/assets/seaweed-tall-left.svg";
+import seaweedTallRight from "@/assets/seaweed-tall-right.svg";
+import seaweedCurly from "@/assets/seaweed-curly.svg";
 import BackgroundFish from "@/components/BackgroundFish";
 import { useGameProgress } from "@/hooks/useGameProgress";
 
@@ -157,16 +160,51 @@ const Home = () => {
           );
         })}
 
-        {/* Seaweed decorations */}
+        {/* Seaweed decorations - multiple across the bottom */}
+        <img 
+          src={seaweedTallLeft} 
+          alt="" 
+          className="absolute left-[2%] bottom-0 w-12 md:w-20 h-auto animate-sway origin-bottom z-10"
+        />
+        <img 
+          src={seaweedCurly} 
+          alt="" 
+          className="absolute left-[12%] bottom-0 w-8 md:w-14 h-auto animate-sway-delayed origin-bottom z-10"
+        />
         <img 
           src={seaweedLeft} 
           alt="" 
-          className="absolute left-[10%] bottom-0 w-10 md:w-16 h-auto animate-sway origin-bottom z-10"
+          className="absolute left-[22%] bottom-0 w-10 md:w-16 h-auto animate-sway origin-bottom z-10"
         />
         <img 
           src={seaweedRight} 
           alt="" 
-          className="absolute right-[5%] bottom-0 w-20 md:w-32 h-auto animate-sway-delayed origin-bottom z-10"
+          className="absolute left-[35%] bottom-0 w-14 md:w-24 h-auto animate-sway-delayed origin-bottom z-10"
+        />
+        <img 
+          src={seaweedTallRight} 
+          alt="" 
+          className="absolute left-[48%] bottom-0 w-10 md:w-18 h-auto animate-sway origin-bottom z-10"
+        />
+        <img 
+          src={seaweedCurly} 
+          alt="" 
+          className="absolute left-[60%] bottom-0 w-12 md:w-20 h-auto animate-sway-delayed origin-bottom z-10"
+        />
+        <img 
+          src={seaweedLeft} 
+          alt="" 
+          className="absolute left-[72%] bottom-0 w-8 md:w-12 h-auto animate-sway origin-bottom z-10"
+        />
+        <img 
+          src={seaweedTallLeft} 
+          alt="" 
+          className="absolute left-[82%] bottom-0 w-14 md:w-24 h-auto animate-sway-delayed origin-bottom z-10"
+        />
+        <img 
+          src={seaweedRight} 
+          alt="" 
+          className="absolute right-[3%] bottom-0 w-16 md:w-28 h-auto animate-sway origin-bottom z-10"
         />
       </div>
 
