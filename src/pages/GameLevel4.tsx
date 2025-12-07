@@ -183,16 +183,21 @@ const GameLevel4 = () => {
               className="absolute flex flex-col items-center"
               style={{ left: stop.x, bottom: stop.bottom }}
             >
-              {/* Word label */}
-              <span className={`font-fredoka font-bold text-xl md:text-2xl mb-2 transition-all duration-300 ${
-                isCompleted 
-                  ? 'text-green-400 line-through opacity-50' 
-                  : isCurrent 
-                    ? 'text-yellow-300 animate-pulse' 
-                    : 'text-white/50'
-              }`}>
-                {stop.word}
-              </span>
+              {/* Word label - positioned high above */}
+              <div 
+                className="absolute z-30"
+                style={{ bottom: '180px' }}
+              >
+                <span className={`font-fredoka font-bold text-2xl md:text-3xl transition-all duration-300 whitespace-nowrap ${
+                  isCompleted 
+                    ? 'text-green-400 line-through opacity-50' 
+                    : isCurrent 
+                      ? 'text-yellow-300 animate-pulse drop-shadow-lg' 
+                      : 'text-white/50'
+                }`}>
+                  {stop.word}
+                </span>
+              </div>
               
               {/* Star marker */}
               <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 transition-all duration-300 ${
