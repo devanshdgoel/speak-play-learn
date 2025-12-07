@@ -15,19 +15,21 @@ const Index = () => {
       {/* Ocean decorations */}
       <OceanBackground />
       
-      {/* Fish school in top right */}
+      {/* Fish school in top right - bigger and different speeds */}
       <div className="absolute top-1/4 right-16 md:right-24">
         <FishGroup count={5} />
       </div>
       
-      {/* Small accent fish near center */}
+      {/* Small accent fish near center - different speeds */}
       <SmallFish 
         className="absolute top-[55%] right-[35%] opacity-90" 
         color="orange" 
+        speed={6}
       />
       <SmallFish 
         className="absolute top-[62%] left-[40%] opacity-80" 
         color="yellow" 
+        speed={10}
       />
       
       {/* Main content */}
