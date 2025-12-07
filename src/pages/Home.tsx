@@ -49,8 +49,9 @@ const Home = () => {
   const getCurrentLevelRoute = () => {
     const currentLevel = completedLevels + 1;
     if (currentLevel === 5) return "/exercise"; // Jellyfish Jungle starts at exercise
+    if (currentLevel === 6) return "/describe-exercise"; // Describe object exercise
     // For future levels, return appropriate routes
-    return "/exercise";
+    return "/describe-exercise";
   };
 
   return (
