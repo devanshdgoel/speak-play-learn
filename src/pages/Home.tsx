@@ -11,21 +11,47 @@ import lockedSignpost from "@/assets/locked-signpost.svg";
 import seaweedLeft from "@/assets/seaweed-left.svg";
 import seaweedRight from "@/assets/seaweed-right.svg";
 import BackgroundFish from "@/components/BackgroundFish";
+import { useGameProgress } from "@/hooks/useGameProgress";
 
 // Node positions along the path (x%, y% from top)
-const nodes = [
-  { x: 7, y: 70, type: "completed" },
-  { x: 14, y: 50, type: "completed" },
-  { x: 24, y: 34, type: "completed" },
-  { x: 36, y: 44, type: "completed" },
-  { x: 48, y: 60, type: "current" },
-  { x: 62, y: 48, type: "locked-jellyfish" },
-  { x: 76, y: 34, type: "locked-signpost" },
-  { x: 90, y: 48, type: "locked" },
+// Index 4 is the Jellyfish Jungle level (level 5)
+const baseNodes = [
+  { x: 7, y: 70, level: 1 },
+  { x: 14, y: 50, level: 2 },
+  { x: 24, y: 34, level: 3 },
+  { x: 36, y: 44, level: 4 },
+  { x: 48, y: 60, level: 5, icon: "jellyfish" },  // Jellyfish Jungle
+  { x: 62, y: 48, level: 6, icon: "signpost" },
+  { x: 76, y: 34, level: 7 },
+  { x: 90, y: 48, level: 8 },
 ];
 
 const Home = () => {
   const navigate = useNavigate();
+  const { completedLevels } = useGameProgress();
+
+  // Determine node types based on progress
+  // completedLevels = 5 means levels 1-5 are complete, so current is level 6
+  const getNodeType = (level: number, icon?: string) => {
+    if (level <= completedLevels) {
+      return "completed";
+    } else if (level === completedLevels + 1) {
+      return "current";
+    } else {
+      // Locked - use icon if specified
+      if (icon === "jellyfish") return "locked-jellyfish";
+      if (icon === "signpost") return "locked-signpost";
+      return "locked";
+    }
+  };
+
+  // Get route for current level
+  const getCurrentLevelRoute = () => {
+    const currentLevel = completedLevels + 1;
+    if (currentLevel === 5) return "/exercise"; // Jellyfish Jungle starts at exercise
+    // For future levels, return appropriate routes
+    return "/exercise";
+  };
 
   return (
     <div className="min-h-screen bg-background relative overflow-x-auto overflow-y-hidden">
@@ -76,50 +102,54 @@ const Home = () => {
         </svg>
 
         {/* Progress nodes */}
-        {nodes.map((node, index) => (
-          <div
-            key={index}
-            className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
-            style={{ left: `${node.x}%`, top: `${node.y}%` }}
-          >
-            {node.type === "completed" && (
-              <img 
-                src={checkCircle} 
-                alt="Completed" 
-                className="w-16 h-16 md:w-20 md:h-20 drop-shadow-lg cursor-pointer hover:scale-110 transition-transform" 
-              />
-            )}
-            {node.type === "current" && (
-              <button 
-                onClick={() => navigate("/exercise")}
-                className="transition-transform hover:scale-110 active:scale-95"
-              >
+        {baseNodes.map((node, index) => {
+          const nodeType = getNodeType(node.level, node.icon);
+          
+          return (
+            <div
+              key={index}
+              className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
+              style={{ left: `${node.x}%`, top: `${node.y}%` }}
+            >
+              {nodeType === "completed" && (
                 <img 
-                  src={playButtonHome} 
-                  alt="Play" 
-                  className="w-20 h-20 md:w-28 md:h-28 drop-shadow-xl" 
+                  src={checkCircle} 
+                  alt="Completed" 
+                  className="w-16 h-16 md:w-20 md:h-20 drop-shadow-lg cursor-pointer hover:scale-110 transition-transform" 
                 />
-              </button>
-            )}
-            {node.type === "locked-jellyfish" && (
-              <img 
-                src={lockedJellyfish} 
-                alt="Locked" 
-                className="w-14 h-14 md:w-16 md:h-16 drop-shadow-lg opacity-90" 
-              />
-            )}
-            {node.type === "locked-signpost" && (
-              <img 
-                src={lockedSignpost} 
-                alt="Locked" 
-                className="w-14 h-14 md:w-16 md:h-16 drop-shadow-lg opacity-90" 
-              />
-            )}
-            {node.type === "locked" && (
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[hsl(200_10%_75%)] border-4 border-[hsl(200_10%_65%)] drop-shadow-lg opacity-80" />
-            )}
-          </div>
-        ))}
+              )}
+              {nodeType === "current" && (
+                <button 
+                  onClick={() => navigate(getCurrentLevelRoute())}
+                  className="transition-transform hover:scale-110 active:scale-95"
+                >
+                  <img 
+                    src={playButtonHome} 
+                    alt="Play" 
+                    className="w-20 h-20 md:w-28 md:h-28 drop-shadow-xl" 
+                  />
+                </button>
+              )}
+              {nodeType === "locked-jellyfish" && (
+                <img 
+                  src={lockedJellyfish} 
+                  alt="Locked" 
+                  className="w-14 h-14 md:w-16 md:h-16 drop-shadow-lg opacity-90" 
+                />
+              )}
+              {nodeType === "locked-signpost" && (
+                <img 
+                  src={lockedSignpost} 
+                  alt="Locked" 
+                  className="w-14 h-14 md:w-16 md:h-16 drop-shadow-lg opacity-90" 
+                />
+              )}
+              {nodeType === "locked" && (
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[hsl(200_10%_75%)] border-4 border-[hsl(200_10%_65%)] drop-shadow-lg opacity-80" />
+              )}
+            </div>
+          );
+        })}
 
         {/* Seaweed decorations */}
         <img 

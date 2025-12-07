@@ -1,12 +1,20 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import eloquaLogo from "@/assets/eloqua-title.svg";
 import jellyfish from "@/assets/jellyfish.svg";
 import backArrow from "@/assets/back-arrow.svg";
 import seaweedCurly from "@/assets/seaweed-curly.svg";
 import BackgroundFish from "@/components/BackgroundFish";
+import { useGameProgress } from "@/hooks/useGameProgress";
 
 const GameComplete = () => {
   const navigate = useNavigate();
+  const { completeLevel } = useGameProgress();
+
+  // Mark Jellyfish Jungle (level 5) as complete when this page loads
+  useEffect(() => {
+    completeLevel(5);
+  }, []);
 
   return (
     <div 
