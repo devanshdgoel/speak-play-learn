@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import OceanBackground from "@/components/OceanBackground";
 import EloquaTitle from "@/components/EloquaTitle";
 import Dolphin from "@/components/Dolphin";
@@ -6,8 +7,10 @@ import FishGroup from "@/components/FishGroup";
 import SmallFish from "@/components/SmallFish";
 
 const Index = () => {
+  const navigate = useNavigate();
+
   const handlePlay = () => {
-    console.log("Starting Eloqua!");
+    navigate("/home");
   };
 
   return (
