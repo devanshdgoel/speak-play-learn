@@ -1,26 +1,32 @@
 import fish from "@/assets/fish.svg";
 
 interface FishGroupProps {
-  count?: number;
   className?: string;
 }
 
-const FishGroup = ({ count = 5, className = "" }: FishGroupProps) => {
-  // Different animation speeds for each fish
-  const speeds = [4, 5.5, 3.5, 6, 4.5];
+const FishGroup = ({ className = "" }: FishGroupProps) => {
+  // Different positions and speeds for each fish - staggered formation
+  const fishData = [
+    { delay: 0, speed: 4, offsetY: 0 },
+    { delay: 0.3, speed: 5.5, offsetY: 12 },
+    { delay: 0.1, speed: 3.5, offsetY: -8 },
+    { delay: 0.5, speed: 6, offsetY: 18 },
+    { delay: 0.2, speed: 4.5, offsetY: 5 },
+  ];
   
   return (
-    <div className={`flex gap-3 ${className}`}>
-      {Array.from({ length: count }).map((_, i) => (
+    <div className={`relative w-48 h-20 ${className}`}>
+      {fishData.map((f, i) => (
         <img 
           key={i} 
           src={fish} 
           alt="" 
-          className="w-10 h-5 md:w-12 md:h-6"
+          className="absolute w-10 h-5 md:w-12 md:h-6"
           style={{ 
-            animation: `swim-fast ${speeds[i % speeds.length]}s ease-in-out infinite`,
-            animationDelay: `${i * 0.2}s`,
-            transform: `translateY(${i % 2 === 0 ? -3 : 3}px)`
+            animation: `swim-across ${f.speed + 8}s linear infinite`,
+            animationDelay: `${f.delay + i * 0.4}s`,
+            top: `${30 + f.offsetY}%`,
+            left: `${i * 18}%`,
           }}
         />
       ))}

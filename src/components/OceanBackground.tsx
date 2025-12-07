@@ -13,35 +13,36 @@ const OceanBackground = () => {
         style={{ transform: 'rotate(180deg) scaleX(-1)' }}
       />
       
-      {/* Bottom right coral - curved wavy lines coming from bottom-right corner, matching design */}
+      {/* Bottom right coral - diagonal wavy lines from top-right to bottom-left */}
       <svg 
-        className="absolute -bottom-4 -right-4 w-[280px] md:w-[380px] lg:w-[450px] h-auto z-30"
-        viewBox="0 0 350 280" 
+        className="absolute bottom-0 right-0 w-[320px] md:w-[420px] lg:w-[500px] h-[280px] md:h-[350px] lg:h-[400px] z-30"
+        viewBox="0 0 400 350" 
         fill="none"
+        preserveAspectRatio="none"
       >
-        {/* Curved ribbon lines going from corner outward in a wave pattern */}
-        <path d="M380 300 Q320 260 280 280 Q220 300 180 260 Q140 220 100 240 Q60 260 20 220 Q-20 180 -40 160" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-        <path d="M385 294 Q325 254 285 274 Q225 294 185 254 Q145 214 105 234 Q65 254 25 214 Q-15 174 -35 154" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-        <path d="M390 288 Q330 248 290 268 Q230 288 190 248 Q150 208 110 228 Q70 248 30 208 Q-10 168 -30 148" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-        <path d="M395 282 Q335 242 295 262 Q235 282 195 242 Q155 202 115 222 Q75 242 35 202 Q-5 162 -25 142" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-        <path d="M400 276 Q340 236 300 256 Q240 276 200 236 Q160 196 120 216 Q80 236 40 196 Q0 156 -20 136" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-        <path d="M405 270 Q345 230 305 250 Q245 270 205 230 Q165 190 125 210 Q85 230 45 190 Q5 150 -15 130" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-        <path d="M410 264 Q350 224 310 244 Q250 264 210 224 Q170 184 130 204 Q90 224 50 184 Q10 144 -10 124" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-        <path d="M415 258 Q355 218 315 238 Q255 258 215 218 Q175 178 135 198 Q95 218 55 178 Q15 138 -5 118" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-        <path d="M420 252 Q360 212 320 232 Q260 252 220 212 Q180 172 140 192 Q100 212 60 172 Q20 132 0 112" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-        <path d="M425 246 Q365 206 325 226 Q265 246 225 206 Q185 166 145 186 Q105 206 65 166 Q25 126 5 106" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
+        {/* Diagonal curved ribbon lines going from top-right corner down to bottom-left */}
+        <path d="M420 -20 Q380 60 340 100 Q280 160 240 200 Q180 260 120 290 Q60 330 0 360" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
+        <path d="M426 -14 Q386 66 346 106 Q286 166 246 206 Q186 266 126 296 Q66 336 6 366" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
+        <path d="M432 -8 Q392 72 352 112 Q292 172 252 212 Q192 272 132 302 Q72 342 12 372" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
+        <path d="M438 -2 Q398 78 358 118 Q298 178 258 218 Q198 278 138 308 Q78 348 18 378" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
+        <path d="M444 4 Q404 84 364 124 Q304 184 264 224 Q204 284 144 314 Q84 354 24 384" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
+        <path d="M450 10 Q410 90 370 130 Q310 190 270 230 Q210 290 150 320 Q90 360 30 390" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
+        <path d="M456 16 Q416 96 376 136 Q316 196 276 236 Q216 296 156 326 Q96 366 36 396" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
+        <path d="M462 22 Q422 102 382 142 Q322 202 282 242 Q222 302 162 332 Q102 372 42 402" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
+        <path d="M468 28 Q428 108 388 148 Q328 208 288 248 Q228 308 168 338 Q108 378 48 408" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
+        <path d="M474 34 Q434 114 394 154 Q334 214 294 254 Q234 314 174 344 Q114 384 54 414" stroke="#D87645" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
       </svg>
       
-      {/* Main wave layer - higher up, taking most of the screen */}
+      {/* Main wave layer - fills from wave line to bottom of screen */}
       <svg 
-        viewBox="0 0 1440 320" 
-        className="absolute top-[35%] left-0 right-0 w-full h-auto z-10"
+        viewBox="0 0 1440 600" 
+        className="absolute top-[30%] left-0 right-0 w-full h-[70%] z-10"
         preserveAspectRatio="none"
       >
         <path 
           fill="hsl(var(--background-wave))" 
           fillOpacity="0.6"
-          d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,138.7C672,128,768,128,864,144C960,160,1056,192,1152,186.7C1248,181,1344,139,1392,117.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+          d="M0,80L48,96C96,112,192,144,288,149.3C384,155,480,133,576,122.7C672,112,768,112,864,128C960,144,1056,176,1152,170.7C1248,165,1344,123,1392,101.3L1440,80L1440,600L0,600Z"
         />
       </svg>
       
